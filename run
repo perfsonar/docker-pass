@@ -22,6 +22,7 @@ die()
     || die "${VAULT}: Not a directory."
 
 docker run -it --rm \
+       --pull always \
        --volume "${HOME}:/vol/home" \
        --volume "${VAULT}:/vol/vault" \
        "${CONTAINER}" \

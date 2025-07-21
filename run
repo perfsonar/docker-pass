@@ -5,8 +5,7 @@
 # Usage: run [ VAULT-DIR ]
 #
 
-# TODO: See why latest doesn't work.
-CONTAINER="ghcr.io/perfsonar/docker-pass:latest@sha256:ae29667afadb1e864e404026ab33fd5d837264042007ff912a4e8304cbf91db5"
+CONTAINER="ghcr.io/perfsonar/docker-pass:latest"
 
 die()
 {
@@ -18,17 +17,12 @@ die()
     || die "Usage: $(basename $0) [ VAULT_DIR ]"
 
 
-[ -n "$1" ] && VAULT="$1" || VAULT=.
+[ -n "$1" ] && VAULT="$1" || VAULT="${HOME}"
 [ -d "${VAULT}" ] \
     || die "${VAULT}: Not a directory."
 
-
-DOT_SSH="${HOME}/.ssh"
-[ -e "${DOT_SSH}" ] && SSH_VOL="--volume ${DOT_SSH}:/ssh"
-
 docker run -it --rm \
-       --volume "${VAULT}:/vault" \
-       ${SSH_VOL} \
+       --volume "${HOME}:/vol/home" \
+       --volume "${VAULT}:/vol/vault" \
        "${CONTAINER}" \
-       /app "$(getent passwd $(id -nu))"
-
+       "$(getent passwd $(id -nu))"

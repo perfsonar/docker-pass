@@ -12,11 +12,13 @@ NEW_GECOS=$(echo $1 | cut -d: -f 5)
 NEW_HOME=$(echo $1 | cut -d: -f 6)
 NEW_SHELL=$(echo $1 | cut -d: -f 7)
 
-
 groupadd \
      -r \
      -g "${NEW_GID}" \
      "${NEW_LOGIN}"
+
+# Disable UID limits so useradd doesn't complain
+sed -e 's/^UID_/# UID_/g' /etc/login.defs
 
 useradd \
     -c "${NEW_GECOS}" \
@@ -26,4 +28,4 @@ useradd \
     -u "${NEW_UID}" \
     "${NEW_LOGIN}"
 
-exec su - "${NEW_LOGIN}" -c "${NEW_SHELL}"
+exec su - "${NEW_LOGIN}"

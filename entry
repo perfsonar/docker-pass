@@ -17,8 +17,8 @@ groupadd \
      -g "${NEW_GID}" \
      "${NEW_LOGIN}"
 
-# Disable UID limits so useradd doesn't complain
-sed -i -e 's/^UID_/# UID_/g' /etc/login.defs
+# Raise UID limits so useradd doesn't complain
+sed -i -e 's/^UID_MAX.*$/UID_MAX 600100000/g' /etc/login.defs
 
 useradd \
     -c "${NEW_GECOS}" \

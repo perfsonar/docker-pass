@@ -1,2 +1,3 @@
-# docker-pass
-A container for running pass
+# A Docker container for running pass
+
+TODO: Write this.

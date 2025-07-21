@@ -1,0 +1,29 @@
+#!/bin/sh -e
+#
+# Entry point for docker-pass
+#
+# Usage: entry LOGIN:x:UID:GID:GECOS:HOME:SHELL
+
+NEW_LOGIN=$(echo $1 | cut -d: -f 1)
+# No second field
+NEW_UID=$(echo $1 | cut -d: -f 3)
+NEW_GID=$(echo $1 | cut -d: -f 4)
+NEW_GECOS=$(echo $1 | cut -d: -f 5)
+NEW_HOME=$(echo $1 | cut -d: -f 6)
+NEW_SHELL=$(echo $1 | cut -d: -f 7)
+
+
+groupadd \
+     -r \
+     -g "${NEW_GID}" \
+     "${NEW_LOGIN}"
+
+useradd \
+    -c "${NEW_GECOS}" \
+    -d /vol/home \
+    -g "${NEW_GID}" \
+    -s "${NEW_SHELL}" \
+    -u "${NEW_UID}" \
+    "${NEW_LOGIN}"
+
+exec su - "${NEW_LOGIN}" -c "${NEW_SHELL}"

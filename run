@@ -1,0 +1,34 @@
+#!/bin/sh -e
+#
+# Run the pass container
+#
+# Usage: run [ VAULT-DIR ]
+#
+
+# TODO: See why latest doesn't work.
+CONTAINER="ghcr.io/perfsonar/docker-pass:latest@sha256:ae29667afadb1e864e404026ab33fd5d837264042007ff912a4e8304cbf91db5"
+
+die()
+{
+    echo "$@" 1>&2
+    exit 1
+}
+
+[ $# -le 1 ] \
+    || die "Usage: $(basename $0) [ VAULT_DIR ]"
+
+
+[ -n "$1" ] && VAULT="$1" || VAULT=.
+[ -d "${VAULT}" ] \
+    || die "${VAULT}: Not a directory."
+
+
+DOT_SSH="${HOME}/.ssh"
+[ -e "${DOT_SSH}" ] && SSH_VOL="--volume ${DOT_SSH}:/ssh"
+
+docker run -it --rm \
+       --volume "${VAULT}:/vault" \
+       ${SSH_VOL} \
+       "${CONTAINER}" \
+       /app "$(getent passwd $(id -nu))"
+

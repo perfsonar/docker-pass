@@ -4,6 +4,6 @@ COPY entry /entry
 
 RUN apt-get update \
     && apt-get -y install pass \
-    && mkdir -p /vol/vault /vol/home
+    && mkdir -p /vault /home
 
 ENTRYPOINT [ "/entry" ]

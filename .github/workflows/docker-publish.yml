@@ -1,4 +1,4 @@
-name: Unbuild Docker Environments
+name: Build container for docker-pass
 
 # This action builds Docker images of unibuild for
 # various OSes and then pushes result to GitHub

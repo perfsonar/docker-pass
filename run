@@ -16,14 +16,16 @@ die()
 [ $# -le 1 ] \
     || die "Usage: $(basename $0) [ VAULT_DIR ]"
 
-
-[ -n "$1" ] && VAULT="$1" || VAULT="${HOME}"
-[ -d "${VAULT}" ] \
-    || die "${VAULT}: Not a directory."
+if [ -n "$1" ]
+then
+    [ -d "$1" ] \
+	|| die "$1: Not a directory."
+    VAULT_VOL="--volume '$1:/vault'"
+fi
 
 docker run -it --rm \
        --pull always \
        --volume "${HOME}:/vol/home" \
-       --volume "${VAULT}:/vol/vault" \
+       ${VAULT_VOL} \
        "${CONTAINER}" \
        "$(getent passwd $(id -nu))"

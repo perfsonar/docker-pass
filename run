@@ -7,11 +7,13 @@
 
 CONTAINER="ghcr.io/perfsonar/docker-pass:latest"
 
+
 die()
 {
     echo "$@" 1>&2
     exit 1
 }
+
 
 [ $# -le 1 ] \
     || die "Usage: $(basename $0) [ VAULT_DIR ]"
@@ -20,12 +22,22 @@ if [ -n "$1" ]
 then
     [ -d "$1" ] \
 	|| die "$1: Not a directory."
-    VAULT_VOL="--volume '$1:/vault'"
 fi
 
-docker run -it --rm \
-       --pull always \
-       --volume "${HOME}:/vol/home" \
-       ${VAULT_VOL} \
-       "${CONTAINER}" \
-       "$(getent passwd $(id -nu))"
+
+run_container()
+{
+
+    exec docker run -it --rm \
+	   --name "pass-$(date +%s)" \
+	   --hostname "pass" \
+	   --pull always \
+	   --volume "${HOME}:/vol/home" \
+	   "$@" \
+	   "${CONTAINER}" \
+	   "$(getent passwd $(id -nu))"
+}
+
+[ -z "$1" ] \
+    && run_container \
+    || run_container --volume "$1:/vault"

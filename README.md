@@ -7,10 +7,14 @@ from EL10, which is why the container exists.
 
 # Running the Container
 
-To run the container, execute the `run` script in this directory.  You
-may optionally provide a path to the vault you wish to operate on,
-which will appear in the container in `/vault`.  In either case, your
-user account on the host will be created in the container and your home
-directory shared as a volume.
+To run the container, execute the `run` script in this directory and
+provide the directory where the vault lives as an argument, e.g.,:
+
+```
+./run ~/work/my-vault
+```
+
+A mirror of your user account on the host will be created in the
+container and your home directory shared as a volume.
 
 Exiting the shell started by `run` will remove the container.

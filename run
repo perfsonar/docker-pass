@@ -2,7 +2,7 @@
 #
 # Run the pass container
 #
-# Usage: run [ VAULT-DIR ]
+# Usage: run VAULT-DIR
 #
 
 CONTAINER="ghcr.io/perfsonar/docker-pass:latest"
@@ -15,15 +15,11 @@ die()
 }
 
 
-[ $# -le 1 ] \
-    || die "Usage: $(basename $0) [ VAULT_DIR ]"
+[ $# -eq 1 ] \
+    || die "Usage: $(basename $0) VAULT_DIR"
 
-if [ -n "$1" ]
-then
-    [ -d "$1" ] \
-	|| die "$1: Not a directory."
-fi
-
+[ -d "$1" ] \
+    || die "$1: Not a directory."
 
 run_container()
 {

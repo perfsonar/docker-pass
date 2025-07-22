@@ -29,4 +29,4 @@ useradd \
     -u "${NEW_UID}" \
     "${NEW_LOGIN}"
 
-exec su - "${NEW_LOGIN}"
+exec su - "${NEW_LOGIN}" -c 'script /dev/null'

@@ -26,8 +26,6 @@ jobs:
 
     strategy:
       fail-fast: true
-      matrix:
-        arch: [ 'linux/amd64', 'linux/arm64', 'linux/arm/v7', 'linux/ppc64le' ]
 
     runs-on: ubuntu-latest
 
@@ -72,29 +70,15 @@ jobs:
             type=ref,event=pr
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker images
-        id: build-and-push
-        if: ${{ matrix.arch == 'linux/amd64' }}
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      # Build and push Docker image with Buildx (don't push on PR)
+      # Build and push Docker image with Buildx (except PRs)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker multiarch images
         id: build-and-push-multiarch
-        if: ${{ matrix.arch != 'linux/amd64' }}
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./Dockerfile
-          platforms: ${{ matrix.arch }}
+          platforms:$ [ 'linux/amd64', 'linux/arm64', 'linux/arm/v7', 'linux/ppc64le' ]
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -15,6 +15,7 @@ NEW_SHELL=$(echo $1 | cut -d: -f 7)
 
 groupadd \
      -r \
+     -o \
      -g "${NEW_GID}" \
      "${NEW_LOGIN}"
 
@@ -22,6 +23,7 @@ groupadd \
 sed -i -e 's/^UID_MAX.*$/UID_MAX 600100000/g' /etc/login.defs
 
 useradd \
+    -o \
     -c "${NEW_GECOS}" \
     -d /vol/home \
     -g "${NEW_GID}" \
